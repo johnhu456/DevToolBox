@@ -7,7 +7,8 @@ function createWindow() {
         width:800,
         height:600,
         webPreferences: {
-            nodeIntegration:true
+            nodeIntegration:true,
+            webviewTag:true
         }
     })
     win.loadFile('index.html')
@@ -25,6 +26,7 @@ function createScreenShotWindow(width,height){
   var url = `file://${__dirname}/screenshot/index.html`;
   screenshotWindow.loadURL(url)
 }
+
 app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {

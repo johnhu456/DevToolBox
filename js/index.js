@@ -17,4 +17,7 @@ $(document).ready(function(){
             ipcRenderer.send('screenshot-captured', { 'image': imageData,'width':size.width,'height':size.height });
         })
     });
+    $("#installer-btn").click(function(){
+      $('#main-panel').attr('src', './installer/index.html')
+  });
 });

@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "jquery": "^3.5.1",
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.4",
+    "usb": "^1.6.3"
   }
 }
