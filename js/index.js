@@ -18,6 +18,7 @@ $(document).ready(function(){
         })
     });
     $("#installer-btn").click(function(){
-      $('#main-panel').attr('src', './installer/index.html')
+      var name = 'file://' + __dirname + '/installer/index.html'
+      $('#main-panel').load(name);
   });
 });
