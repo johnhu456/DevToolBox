@@ -26,7 +26,7 @@ function createScreenShotWindow(width,height){
   var url = `file://${__dirname}/screenshot/index.html`;
   screenshotWindow.loadURL(url)
 }
-
+app.allowRendererProcessReuse = false;
 app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {
