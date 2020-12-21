@@ -17,6 +17,6 @@
     "electron-rebuild": "^2.3.4",
     "jquery": "^3.5.1",
     "shelljs": "^0.8.4",
-    "usb": "^1.6.3"
+    "usb-detection": "^4.10.0"
   }
 }

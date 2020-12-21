@@ -10,15 +10,17 @@ try {
   }
 $(document).ready(function(){
     $("#notification-btn").click(function(){
+        ipcRenderer.send('switch-panel', {'index': 0})
         shelljs.exec(`screencapture -ic my.png`, function (res) {
             const image = clipboard.readImage()
-            const size = image.getSize()
-            const imageData = image.toDataURL()
-            ipcRenderer.send('screenshot-captured', { 'image': imageData,'width':size.width,'height':size.height });
+            if (image) {
+              const size = image.getSize()
+              const imageData = image.toDataURL()
+              ipcRenderer.send('screenshot-captured', { 'image': imageData,'width':size.width,'height':size.height });
+            }
         })
     });
     $("#installer-btn").click(function(){
-      var name = 'file://' + __dirname + '/installer/index.html'
-      $('#main-panel').load(name);
-  });
+      ipcRenderer.send('switch-panel', {'index': 1})
+    })
 });
