@@ -21,6 +21,9 @@ function createWindow() {
     panel.setBounds({ x: 200, y: 0, width: 600, height: 600 })
     var url = `file://${__dirname}/screenshot/index.html`;
     panel.webContents.loadURL(url)
+    panel.webContents.on('will-navigate',(event)=> {
+      console.log(event)
+    })
     win.loadFile('index.html')
 }
 function createScreenShotWindow(width,height){
@@ -63,7 +66,9 @@ ipcMain.on('switch-panel',function(event,payload){
       url = `file://${__dirname}/installer/index.html`;
       break
   }
+  panel.webContents.forcefullyCrashRenderer()
   panel.webContents.loadURL(url)
+  panel.webContents.openDevTools()
 })
 
 ipcMain.on('screenshot-captured',function(event, payload){
