@@ -1,5 +1,6 @@
-const {app, BrowserWindow,ipcMain,ipcRenderer, BrowserView } = require('electron')
+const {app, BrowserWindow,ipcMain,ipcRenderer, BrowserView, globalShortcut, clipboard} = require('electron')
 const $=require('jquery')
+const shelljs=require('shelljs')
 var screenshotWindow = null;
 var win = null;
 var panel=null;
@@ -18,6 +19,7 @@ function createWindow() {
       }
     })
     win.setBrowserView(panel)
+    win.webContents.openDevTools()
     panel.setBounds({ x: 200, y: 0, width: 600, height: 600 })
     var url = `file://${__dirname}/screenshot/index.html`;
     panel.webContents.loadURL(url)
@@ -40,7 +42,10 @@ function createScreenShotWindow(width,height){
   screenshotWindow.loadURL(url)
 }
 app.allowRendererProcessReuse = false;
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  createWindow();
+  globalShortcut.register('Shift+Command+S',takeScreenshot)
+})
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -67,6 +72,8 @@ ipcMain.on('switch-panel',function(event,payload){
       break
   }
   panel.webContents.forcefullyCrashRenderer()
+  panel.webContents.stop()
+  panel.webContents.loadURL(url)
   panel.webContents.loadURL(url)
   panel.webContents.openDevTools()
 })
@@ -82,3 +89,19 @@ ipcMain.on('screenshot-captured',function(event, payload){
     screenshotWindow = null
   })
 });
+
+function takeScreenshot(){
+  shelljs.exec(`screencapture -ic my.png`, function (res) {
+    const image = clipboard.readImage()
+    const size = image.getSize()
+    const imageData = image.toDataURL()
+    createScreenShotWindow(size.width,size.height);
+    screenshotWindow.once('ready-to-show', () => { //when the new window is ready, show it up
+      screenshotWindow.show()
+      screenshotWindow.webContents.send('captured-image',imageData);
+    })
+    screenshotWindow.on('closed', function() { //set new window to null when we're done
+      screenshotWindow = null
+    })
+  })
+}
